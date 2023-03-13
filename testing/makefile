@@ -9,7 +9,7 @@ all: app
 
 app:
 	$(CC_C) $(CFLAGS) timer.c -o $(OUTDIR)/$(OUTFILE) 
-	#//display_test
+	#//display_test.c
 
 clean:
 	rm $(OUTDIR)/$(OUTFILE)

@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#define HIGH 0
-#define LOW 1
+#define HIGH 1
+#define LOW 0
 #define CMD_AUTO_ADDR 0x40
 #define START_ADDR 0xc0
 #define NUM_DIGITS 4
@@ -185,8 +185,5 @@ void fourDigit_display(char* digits, _Bool colonOn) {
 }
 
 int main() {
-    // fourDigit_display("0x3f", false);
-    printf("DLFJSDL\n");
-    wait1();
-    printf("LDSFJLK]\n");
+    fourDigit_display("0443", true);
 }
