@@ -185,5 +185,8 @@ void fourDigit_display(char* digits, _Bool colonOn) {
 }
 
 int main() {
-    fourDigit_display("2345", true);
+    // fourDigit_display("0x3f", false);
+    printf("DLFJSDL\n");
+    wait1();
+    printf("LDSFJLK]\n");
 }
