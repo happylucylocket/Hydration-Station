@@ -6,7 +6,7 @@
 // #define DEFAULT_TIME 1800 // 30 minutes
 #define DEFAULT_TIME 5 // for testing - DELETE LATER
 #define MIN_TIME 900 // 15 minutes
-#define MAX_TIME 7200 // 2 hours
+#define MAX_TIME 10800 // 3 hours
 
 static void timer(void);
 
