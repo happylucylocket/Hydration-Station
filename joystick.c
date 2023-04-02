@@ -183,7 +183,7 @@ void* joystickThread(void* arg) {
         currentJoystick = currentDirection();
         if (currentJoystick == CENTER) {
             if (Timer_getTimeRemaining() > 0) {
-                printf("Error: Alarm hasn't gone off yet!\n");
+                printf("Alarm hasn't gone off!\n");
             }
             else {
                 printf("ALARM SILENCED\n");
@@ -205,6 +205,7 @@ void* joystickThread(void* arg) {
         else if (currentJoystick == LEFT) {
             printf("LESS TIME\n");
 
+             // Minus 15 minutes
             long long currentTimer = Timer_getTimer();
             int newTime = currentTimer - 900;
             Timer_setTimer(newTime);
@@ -213,6 +214,7 @@ void* joystickThread(void* arg) {
         else if (currentJoystick == RIGHT) {
             printf("MORE TIME\n");
 
+            // Add 15 minutes
             long long currentTimer = Timer_getTimer();
             int newTime = currentTimer + 900;
             Timer_setTimer(newTime);

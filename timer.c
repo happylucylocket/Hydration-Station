@@ -45,11 +45,15 @@ void sleepForMs(long long delayInMs) {
 void Timer_setTimer(long long newTime) {
     // Ensure timer length is greater than 15 minutes (in seconds)
 	if (newTime < MIN_TIME || newTime > MAX_TIME) {
-		printf("ERROR: Alarm interval must be between 900 (15 minutes) and 7200 (2 hours).\n");
+		printf("ERROR: Alarm interval must be between 900s (15 minutes) and 7200s (2 hours).\n");
 		return;
 	}
-     totalSeconds = newTime;
-     secondsRemaining = newTime;
+    else if (secondsRemaining == 0) {
+        printf("ERROR: Cannot set new time while alarm is on\n");
+        return;
+    }
+    totalSeconds = newTime;
+    secondsRemaining = newTime;
 }
 
 long long Timer_getTimer() 
@@ -60,10 +64,9 @@ long long Timer_getTimer()
 long long Timer_getTimeRemaining()
 {
     return secondsRemaining;
-
 }
 
-void Timer_silenceAlarm() 
+void Timer_silenceAlarm()
 {
     silenced = true;
 }
@@ -89,7 +92,6 @@ static void timer(void) {
         }
     }
 }
-
 
 void* timerThread(void* arg) {
     while(!stopping) {

@@ -4,15 +4,18 @@
 #include "audioPlayer.h"
 #include "joystick.h"
 #include "timer.h"
+#include "udp.h"
+#include "shutdown.h"
 
 int main() {
     Audio_init();
     Joystick_init();
     Timer_init();
+    UDP_init();
 
-    sleepForMs(100000);
-    // Shutdown_waitForShutdown();
+    Shutdown_waitForShutdown();
     
+    UDP_cleanup();
     Joystick_cleanup();
     Timer_cleanup();
     Audio_cleanup();

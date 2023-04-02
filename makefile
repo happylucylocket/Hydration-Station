@@ -4,7 +4,7 @@
 # Edit this file to compile extra C files into their own programs.
 TARGET= water_screamer
 
-SOURCES= audioPlayer.c main.c joystick.c timer.c
+SOURCES= audioPlayer.c main.c joystick.c timer.c shutdown.c udp.c
 # SOURCES= testwave.c
 
 PUBDIR = $(HOME)/cmpt433/public/myApps
@@ -29,15 +29,17 @@ LFLAGS = -L$(HOME)/cmpt433/public/asound_lib_BBB
 # -pg for supporting gprof profiling.
 #CFLAGS += -pg
 
-
-
-all: wav
+all: wav node
 	$(CC_C) $(CFLAGS) $(SOURCES) -o $(OUTDIR)/$(TARGET)  $(LFLAGS) -lpthread -lasound
 
 # Copy wave files to the shared folder
 wav:
 	mkdir -p $(PUBDIR)/wave-files/
-	cp wave-files/* $(PUBDIR)/wave-files/ 
+	cp wave-files/* $(PUBDIR)/wave-files/
+node:
+	mkdir -p $(PUBDIR)/project-server-copy/ 
+	cp -R server/* $(PUBDIR)/project-server-copy/ 
+	cd $(PUBDIR)/project-server-copy/ && npm install
 
 clean:
 	rm -f $(OUTDIR)/$(TARGET)

@@ -1,0 +1,46 @@
+body {
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
+h1, h2 {
+	margin-bottom: 1px;
+	padding-bottom: 1px;
+}
+
+#title {
+	margin-bottom: 1em;
+	margin-left: 1em;
+}
+
+#content {
+	margin-top: 2em;
+	margin-left: 2em;
+}
+
+#left-box {
+	margin-right: 300px;	
+	border: thin black solid;
+	padding-left: 10pt;
+	padding-right: 10pt;
+	min-height: 200pt;
+}
+
+#error-box {
+	border: thin black solid;
+	clear: both;
+	background-color: red;
+	padding-left: 10pt;
+	padding-right: 10pt;
+	min-height: 100pt;
+	margin-top: 20px;
+	display: none;
+}
+
+#error-text {
+	color: black;
+}
+
+#timerBox {
+	margin-left: 2em;
+}
