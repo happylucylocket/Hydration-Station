@@ -5,6 +5,7 @@
 #include "timer.h"
 #include "pump.h"
 
+
 #define P9_19_GPIO_CONFIG "config-pin P9_19 gpio"
 #define P9_20_GPIO_CONFIG "config-pin P9_20 gpio"
 
@@ -47,11 +48,6 @@ void Pump_init(void)
     sleepForMs(350);
 
     writeToFile(PUMP_DIRECTION_FILE, "out");
-    writeToFile(PUMP_VALUE_FILE, OFF);
-}
-
-void Pump_cleanup(void)
-{
     writeToFile(PUMP_VALUE_FILE, OFF);
 }
 
