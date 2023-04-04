@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include "audioPlayer.h"
-#include "distanceSensor.h"
+#include "distanceSensorLinux.h"
 #include "pump.h"
 
 // #define DEFAULT_TIME 1800 // 30 minutes
@@ -34,18 +34,6 @@ void Timer_cleanup() {
     stopping = true;
 	pthread_join(timerThreadId, NULL);
     pthread_mutex_destroy(&timerMutex);
-}
-
-void sleepForMs(long long delayInMs) {
-    const long long NS_PER_MS = 1000 * 1000;
-    const long long NS_PER_SECOND = 1000000000;
-
-    long long delayNs = delayInMs * NS_PER_MS;
-    int seconds = delayNs / NS_PER_SECOND;
-    int nanoseconds = delayNs % NS_PER_SECOND;
-
-    struct timespec reqDelay = {seconds, nanoseconds};
-    nanosleep(&reqDelay, (struct timespec *) NULL);
 }
 
 void Timer_setTimer(long long newTime) {
@@ -109,7 +97,7 @@ static void timer(void) {
 
         if (secondsRemaining <= 0) {
             printf("SECONDS = 0\n");
-            double distance = getDistance();
+            double distance = DistanceSensor_getDistance();
             printf("distance sensor: %02f\n", distance);
             if(distance > -1 && distance < 3) {
                 Pump_pumpML(waterAmount);
@@ -117,10 +105,9 @@ static void timer(void) {
             } else {
                 // Audio_playScream();
                 do {
-                    distance = getDistance();
+                    distance = DistanceSensor_getDistance();
                     printf("distance sensor inside: %02f\n", distance);
-
-                } while(!(distance > -1 && distance < 4));
+                } while(!(distance > -1 && distance < 4) && !stopping);
                 Pump_pumpML(waterAmount);
             }
             while(!silenced && !stopping) {}; 
@@ -145,4 +132,16 @@ long long getTimeInUs(void)
     long long microSeconds = seconds * 1000000
     + nanoSeconds / 1000;
     return microSeconds;
+}
+
+void sleepForMs(long long delayInMs) {
+    const long long NS_PER_MS = 1000 * 1000;
+    const long long NS_PER_SECOND = 1000000000;
+
+    long long delayNs = delayInMs * NS_PER_MS;
+    int seconds = delayNs / NS_PER_SECOND;
+    int nanoseconds = delayNs % NS_PER_SECOND;
+
+    struct timespec reqDelay = {seconds, nanoseconds};
+    nanosleep(&reqDelay, (struct timespec *) NULL);
 }

@@ -12,6 +12,7 @@ void Timer_setTimer(long long newTime);
 long long Timer_getTimeRemaining(void);
 int Timer_getWaterAmount(void);
 void Timer_setWaterAmount(int amount);
+
 long long getTimeInUs(void);
 void sleepForMs(long long delayInMs);
 

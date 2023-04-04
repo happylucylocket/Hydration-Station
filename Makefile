@@ -4,7 +4,7 @@
 # Edit this file to compile extra C files into their own programs.
 TARGET= water_screamer
 
-SOURCES= audioPlayer.c main.c joystick.c timer.c shutdown.c udp.c distanceSensor.c pump.c
+SOURCES= audioPlayer.c main.c joystick.c timer.c shutdown.c udp.c distanceSensorLinux.c pump.c
 # SOURCES= testwave.c
 
 PUBDIR = $(HOME)/cmpt433/public/myApps

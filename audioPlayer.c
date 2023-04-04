@@ -51,13 +51,13 @@ void Audio_init(void)
 
 void Audio_cleanup(void)
 {
+	printf("Cleaning up audioPlayer.c\n");
 	Audio_stopScream();
 	// Cleanup, letting the music in buffer play out (drain), then close and free.
 	snd_pcm_drain(handle);
 	snd_pcm_hw_free(handle);
 	snd_pcm_close(handle);
 	free(sampleFile.pData);
-	printf("Cleaning up audioPlayer.c\n");
 }
 
 // Open the PCM audio output device and configure it.

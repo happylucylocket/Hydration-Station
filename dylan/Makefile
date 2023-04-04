@@ -8,7 +8,7 @@ CFLAGS = -Wall -g -std=c99 -D _POSIX_C_SOURCE=200809L -Werror -Wshadow -pthread
 all: project 
 
 project:
-	$(CC_C) $(CFLAGS) main.c pump.c timer.c distanceSensorLinux.c distanceSensor.c -o $(OUTDIR)/$(OUTFILE)
+	$(CC_C) $(CFLAGS) main.c pump.c timer.c distanceSensorLinux.c distanceSensorGPIO.c -o $(OUTDIR)/$(OUTFILE)
 
 clean: 
 	rm $(OUTDIR)/$(OUTFILE)

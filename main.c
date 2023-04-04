@@ -7,25 +7,28 @@
 #include "udp.h"
 #include "shutdown.h"
 #include "pump.h"
-
+#include "distanceSensorLinux.h"
 
 int main() {
     Audio_init();
     printf("1");
     Joystick_init();
     printf("2");
-    Timer_init();
+    DistanceSensor_init();
     printf("3");
-    Pump_init();
+    Timer_init();
     printf("4");
-    UDP_init();
+    Pump_init();
     printf("5");
+    UDP_init();
+    printf("6\n");
 
     Shutdown_waitForShutdown();
     
     UDP_cleanup();
-    Joystick_cleanup();
     Timer_cleanup();
+    DistanceSensor_cleanup();
+    Joystick_cleanup();
     Audio_cleanup();
 
     return 0;
