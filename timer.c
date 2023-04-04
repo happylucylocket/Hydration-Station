@@ -12,13 +12,14 @@
 
 static void timer(void);
 
-long long totalSeconds;
-long long secondsRemaining;
+static long long totalSeconds;
+static long long secondsRemaining;
 static pthread_t timerThreadId;
 void* timerThread(void* arg);
+static pthread_mutex_t timerMutex = PTHREAD_MUTEX_INITIALIZER;
 static bool stopping = false;
 static bool silenced = false;
-int waterAmount = CUP_ML;
+static int waterAmount = CUP_ML;
 
 
 void Timer_init() {
@@ -32,6 +33,7 @@ void Timer_cleanup() {
     printf("Cleaning up Timer thread\n");
     stopping = true;
 	pthread_join(timerThreadId, NULL);
+    pthread_mutex_destroy(&timerMutex);
 }
 
 void sleepForMs(long long delayInMs) {
@@ -56,8 +58,12 @@ void Timer_setTimer(long long newTime) {
         printf("ERROR: Cannot set new time while alarm is on\n");
         return;
     }
-    totalSeconds = newTime;
-    secondsRemaining = newTime;
+    pthread_mutex_lock(&timerMutex);
+    {
+        totalSeconds = newTime;
+        secondsRemaining = newTime;
+    }
+    pthread_mutex_unlock(&timerMutex);
 }
 
 long long Timer_getTimer() 
@@ -70,8 +76,18 @@ long long Timer_getTimeRemaining()
     return secondsRemaining;
 }
 
-int Timer_getWaterAmount() {
+int Timer_getWaterAmount() 
+{
     return waterAmount;
+}
+
+void Timer_setWaterAmount(int newAmount) 
+{
+    pthread_mutex_lock(&timerMutex);
+    {
+        waterAmount = newAmount;
+    }
+    pthread_mutex_unlock(&timerMutex);
 }
 
 void Timer_silenceAlarm()
@@ -107,7 +123,7 @@ static void timer(void) {
                 } while(!(distance > -1 && distance < 4));
                 Pump_pumpML(waterAmount);
             }
-            while(!silenced) {}; 
+            while(!silenced && !stopping) {}; 
             return;
         }
     }

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "timer.h"
+#include "pump.h"
 #include "audioPlayer.h"
 
 #define JOYSTICK_UP_VALUE "/sys/class/gpio/gpio26/value"
@@ -193,18 +194,40 @@ void* joystickThread(void* arg) {
             sleepForMs(300);
         }
         else if (currentJoystick == UP) {
-            printf("MORE WATER\n");
             // Increase water amount by 1 preset amount
+            int current_amount = Timer_getWaterAmount();
+            if (current_amount == CUP_ML) {
+                Timer_setWaterAmount(MUG_ML);
+            }
+            else if (current_amount == MUG_ML) {
+                Timer_setWaterAmount(BOTTLE_ML);
+            }
+            else if (current_amount == BOTTLE_ML) {
+                Timer_setWaterAmount(BIG_BOTTLE_ML);
+            }
+            else if (current_amount == BIG_BOTTLE_ML) {
+                Timer_setWaterAmount(MUG_ML);
+            }
             sleepForMs(300);
         }
         else if (currentJoystick == DOWN) {
-            printf("LESS WATER\n");
             // Decrease water amount by 1 preset amount
+            int current_amount = Timer_getWaterAmount();
+            if (current_amount == BIG_BOTTLE_ML) {
+                Timer_setWaterAmount(BOTTLE_ML);
+            }
+            else if (current_amount == BOTTLE_ML) {
+                Timer_setWaterAmount(MUG_ML);
+            }
+            else if (current_amount == MUG_ML) {
+                Timer_setWaterAmount(CUP_ML);
+            }
+            else if (current_amount == CUP_ML) {
+                Timer_setWaterAmount(BIG_BOTTLE_ML);
+            }
             sleepForMs(300);
         }
         else if (currentJoystick == LEFT) {
-            printf("LESS TIME\n");
-
              // Minus 15 minutes
             long long currentTimer = Timer_getTimer();
             int newTime = currentTimer - 900;
@@ -212,8 +235,6 @@ void* joystickThread(void* arg) {
             sleepForMs(300);
         }
         else if (currentJoystick == RIGHT) {
-            printf("MORE TIME\n");
-
             // Add 15 minutes
             long long currentTimer = Timer_getTimer();
             int newTime = currentTimer + 900;

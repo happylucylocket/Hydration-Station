@@ -64,7 +64,7 @@ $(document).ready(function() {
 		sendCommandViaUDP("bottle");
 	});
 
-	$('#bigbottle').click(function(){
+	$('#bigBottle').click(function(){
 		sendCommandViaUDP("big bottle");
 	});
 
@@ -96,7 +96,18 @@ $(document).ready(function() {
 	});
 
 	socket.on('volumeContents', function(result) {
-		$('#volumeid').html(result);
+		if (result == 235) {
+			$('#volumeid').html("235mL");
+		}
+		else if (result == 350) {
+			$('#volumeid').html("350mL");
+		}
+		else if (result == 500) {
+			$('#volumeid').html("500mL");
+		}
+		else if (result == 930) {
+			$('#volumeid').html("930mL");
+		}
 	});
 
 	// socket.on('serverError', function(result) {

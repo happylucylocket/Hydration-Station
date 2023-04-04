@@ -13,6 +13,7 @@
 #include "shutdown.h"
 #include "timer.h"
 #include "audioPlayer.h"
+#include "pump.h"
 
 #define MSG_MAX_LEN 1024
 #define PORT        8088
@@ -173,6 +174,7 @@ static void silence_response()
 static void cup_response()
 {
     // CHANGE PUMP TIMING TO 235mL
+    Timer_setWaterAmount(CUP_ML);
 
     // Compose the reply message:
     // (NOTE: watch for buffer overflows!).
@@ -190,6 +192,7 @@ static void cup_response()
 static void mug_response()
 {
     // CHANGE PUMP TIMING TO 350mL
+    Timer_setWaterAmount(MUG_ML);
 
     // Compose the reply message:
     // (NOTE: watch for buffer overflows!).
@@ -207,6 +210,7 @@ static void mug_response()
 static void bottle_response()
 {
     // CHANGE PUMP TIMING TO 500mL
+    Timer_setWaterAmount(BOTTLE_ML);
 
     // Compose the reply message:
     // (NOTE: watch for buffer overflows!).
@@ -224,6 +228,7 @@ static void bottle_response()
 static void big_bottle_response()
 {
     // CHANGE PUMP TIMING TO 930mL
+    Timer_setWaterAmount(BIG_BOTTLE_ML);
 
     // Compose the reply message:
     // (NOTE: watch for buffer overflows!).
@@ -297,13 +302,11 @@ static void quit_response()
 static void water_volume_response()
 {
     // INSERT GET WATER VOLUME FUNCTIONS
-
+    int amount = Timer_getWaterAmount();
     // Compose the reply message:
     // (NOTE: watch for buffer overflows!).
     char messageTx[MSG_MAX_LEN];
-    // sprintf(messageTx, "%lld", beat);
-
-    sprintf(messageTx, "Get water volume\n");
+    sprintf(messageTx, "%d", amount);
 
     // Transmit a reply:
     sin_len = sizeof(sinRemote);
