@@ -19,13 +19,16 @@
 //     return 0;
 // }
 
-// int main(int argc, char* args[]) 
-// {
-//     // for(int i = 0; i < 10; i++) {
-//     while(1) {
-//         double distance = DistanceSensor_getDistance();
-//         printf("Current distance: %0.2fcm\n", distance);
-//         sleepForMs(500);
-//     }    
-//     return 0;
-// }
+int main(int argc, char* args[]) 
+{
+    DistanceSensor_init();
+    for(int i = 0; i < 10; i++) {
+    // while(1) {
+        double distance = DistanceSensor_getDistance();
+        printf("Current distance: %0.2fcm\n", distance);
+        // test();
+        sleepForMs(500);
+    }    
+    DistanceSensor_cleanup();
+    return 0;
+}

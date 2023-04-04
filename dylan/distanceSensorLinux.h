@@ -5,4 +5,6 @@ void DistanceSensor_init(void);
 void DistanceSensor_cleanup(void);
 double DistanceSensor_getDistance(void);
 
+void test(void);
+
 #endif

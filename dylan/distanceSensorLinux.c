@@ -8,12 +8,14 @@
 #include "distanceSensorLinux.h"
 
 #define PRU_ADDR 0x4A300000
-#define PRU0_DRAM 0x00000
 #define PRU_LEN 0x80000  
+#define PRU0_DRAM 0x00000
 #define PRU_SHAREDMEM 0x10000
+#define PRU_MEM_RESERVED 0x200 
 
 #define PRU0_MEM_FROM_BASE(base) ( (base) + PRU0_DRAM + PRU_MEM_RESERVED)
 
+static volatile void* pruBase = NULL;
 static volatile sharedMemStruct_t* pSharedPru0 = NULL;
 
 static volatile void* getPruMmapAddr(void);
@@ -21,17 +23,25 @@ static void freePruMmapAddr(volatile void* pPruBase);
 
 void DistanceSensor_init(void)
 {
-    pSharedPru0 = getPruMmapAddr();
+    pruBase = getPruMmapAddr();
+    pSharedPru0 = PRU0_MEM_FROM_BASE(pruBase);
 }
 
 void DistanceSensor_cleanup(void)
 {
-    freePruMmapAddr(pSharedPru0);
+    freePruMmapAddr(pruBase);
 }
 
 double DistanceSensor_getDistance(void)
 {
     return pSharedPru0->currentDistance;
+}
+
+void test(void)
+{
+    printf("    %15s: 0x%02x\n", "smileCount", pSharedPru0->smileCount);
+    printf("    %15s: 0x%016llx\n", "numMs", pSharedPru0->numMsSinceBigBang);
+    printf("\n");
 }
 
 static volatile void* getPruMmapAddr(void)
