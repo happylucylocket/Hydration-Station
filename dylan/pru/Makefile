@@ -34,8 +34,8 @@ OBJECTS     =$(patsubst %,$(GEN_DIR)/%,$(SOURCES:.c=.object))
 all: initPins printStart $(TARGET) printEnd
 
 initPins:
-	@sudo config-pin P8_12 pruout
-	@sudo config-pin P8_15 pruin
+	@sudo config-pin P8_27 pruout
+	@sudo config-pin P8_29 pruin
 
 printStart:
 	@echo ''

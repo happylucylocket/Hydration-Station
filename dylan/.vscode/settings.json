@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "shareddatastruct.h": "c"
+        "shareddatastruct.h": "c",
+        "distancesensor.h": "c"
     }
 }

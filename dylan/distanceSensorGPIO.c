@@ -3,10 +3,10 @@
 #include "timer.h"
 #include <stdlib.h>
 
-// P9_41  = gpio20 and P9_42 = gpio7
-
-#define TRIGGER "/sys/class/gpio/gpio20/value"
-#define ECHO "/sys/class/gpio/gpio7/value"
+// Trigger = P8_27 (GPIO 86), direction = out
+// Echo = P8_29 (GPIO 87), direction = in
+#define TRIGGER "/sys/class/gpio/gpio86/value"
+#define ECHO "/sys/class/gpio/gpio87/value"
 
 #define ON "1"
 #define OFF "0"
