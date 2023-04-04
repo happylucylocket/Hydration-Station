@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include "audioPlayer.h"
+#include "distanceSensor.h"
+#include "pump.h"
 
 // #define DEFAULT_TIME 1800 // 30 minutes
 #define DEFAULT_TIME 5 // for testing - DELETE LATER
@@ -16,6 +18,8 @@ static pthread_t timerThreadId;
 void* timerThread(void* arg);
 static bool stopping = false;
 static bool silenced = false;
+int waterAmount = CUP_ML;
+
 
 void Timer_init() {
     totalSeconds = DEFAULT_TIME;
@@ -66,6 +70,10 @@ long long Timer_getTimeRemaining()
     return secondsRemaining;
 }
 
+int Timer_getWaterAmount() {
+    return waterAmount;
+}
+
 void Timer_silenceAlarm()
 {
     silenced = true;
@@ -84,10 +92,22 @@ static void timer(void) {
         secondsRemaining -= 1;
 
         if (secondsRemaining <= 0) {
-            while (!silenced && !stopping) {
-                printf("DRINK WATER\n");
-                Audio_playScream();
+            printf("SECONDS = 0\n");
+            double distance = getDistance();
+            printf("distance sensor: %02f\n", distance);
+            if(distance > -1 && distance < 3) {
+                Pump_pumpML(waterAmount);
+                // Audio_playScream();
+            } else {
+                // Audio_playScream();
+                do {
+                    distance = getDistance();
+                    printf("distance sensor inside: %02f\n", distance);
+
+                } while(!(distance > -1 && distance < 4));
+                Pump_pumpML(waterAmount);
             }
+            while(!silenced) {}; 
             return;
         }
     }
@@ -98,4 +118,15 @@ void* timerThread(void* arg) {
         timer();
     }
     return NULL;
+}
+
+long long getTimeInUs(void)
+{
+    struct timespec spec;
+    clock_gettime(CLOCK_REALTIME, &spec);
+    long long seconds = spec.tv_sec;
+    long long nanoSeconds = spec.tv_nsec;
+    long long microSeconds = seconds * 1000000
+    + nanoSeconds / 1000;
+    return microSeconds;
 }

@@ -7,6 +7,8 @@
 #include <alsa/asoundlib.h>
 #include <alloca.h> // needed for mixer
 #include "audioPlayer.h"
+#include <pthread.h>
+#include <stdbool.h>
 
 // File used for play-back:
 // If cross-compiling, must have this file available, via this relative path,
@@ -22,6 +24,10 @@
 
 snd_pcm_t *handle;
 wavedata_t sampleFile;
+
+static pthread_t audioThreadId;
+static void* audioThread(void* arg);
+static bool stopping = false;
 
 // Prototypes:
 static snd_pcm_t *Audio_openDevice();
@@ -45,6 +51,7 @@ void Audio_init(void)
 
 void Audio_cleanup(void)
 {
+	Audio_stopScream();
 	// Cleanup, letting the music in buffer play out (drain), then close and free.
 	snd_pcm_drain(handle);
 	snd_pcm_hw_free(handle);
@@ -182,10 +189,24 @@ static void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData)
 }
 
 void Audio_playScream(void) {
-	// Play Audio
-	Audio_playFile(handle, &sampleFile);
+	// Play Audio thread
+	stopping = false;
+	pthread_create(&audioThreadId, NULL, audioThread, NULL);
+	printf("Exit playScream\n");
 }
 
 void Audio_stopScream(void) {
 	snd_pcm_drop(handle);
+	stopping = true;
+	pthread_join(audioThreadId, NULL);
+	printf("STOP SCREAM FINISHED\n");
+}
+
+
+static void* audioThread(void* arg) {
+    while(!stopping) {
+		printf("Playing audio\n");
+		Audio_playFile(handle, &sampleFile);
+    }
+    return NULL;
 }
