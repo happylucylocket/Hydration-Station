@@ -5,8 +5,8 @@
 #include "distanceSensorLinux.h"
 #include "pump.h"
 
-// #define DEFAULT_TIME 1800 // 30 minutes
-#define DEFAULT_TIME 5 // for testing - DELETE LATER
+#define DEFAULT_TIME 1800 // 30 minutes
+// #define DEFAULT_TIME 15 // for testing - DELETE LATER
 #define MIN_TIME 900 // 15 minutes
 #define MAX_TIME 10800 // 3 hours
 
@@ -34,6 +34,29 @@ void Timer_cleanup() {
     stopping = true;
 	pthread_join(timerThreadId, NULL);
     pthread_mutex_destroy(&timerMutex);
+}
+
+long long getTimeInUs(void)
+{
+    struct timespec spec;
+    clock_gettime(CLOCK_REALTIME, &spec);
+    long long seconds = spec.tv_sec;
+    long long nanoSeconds = spec.tv_nsec;
+    long long microSeconds = seconds * 1000000
+    + nanoSeconds / 1000;
+    return microSeconds;
+}
+
+void sleepForMs(long long delayInMs) {
+    const long long NS_PER_MS = 1000 * 1000;
+    const long long NS_PER_SECOND = 1000000000;
+
+    long long delayNs = delayInMs * NS_PER_MS;
+    int seconds = delayNs / NS_PER_SECOND;
+    int nanoseconds = delayNs % NS_PER_SECOND;
+
+    struct timespec reqDelay = {seconds, nanoseconds};
+    nanosleep(&reqDelay, (struct timespec *) NULL);
 }
 
 void Timer_setTimer(long long newTime) {
@@ -96,23 +119,25 @@ static void timer(void) {
         secondsRemaining -= 1;
 
         if (secondsRemaining <= 0) {
-            printf("SECONDS = 0\n");
             double distance = DistanceSensor_getDistance();
-            printf("distance sensor: %02f\n", distance);
-            if(distance > -1 && distance < 3) {
+            printf("Distance sensor: %02f\n", distance);
+            // If there is something to hold the water close enough to the distance sensor, dispense water and then scream
+            if (distance > -1 && distance < 4) {
                 Pump_pumpML(waterAmount);
-                // Audio_playScream();
+                Audio_playScream();
             } else {
-                // Audio_playScream();
+                // If there isn't anything in front of distance sensor, scream first and wait until something is in front of the sensor to dispense water
+                Audio_playScream();
                 do {
                     distance = DistanceSensor_getDistance();
-                    printf("distance sensor inside: %02f\n", distance);
-                } while(!(distance > -1 && distance < 4) && !stopping);
+                    printf("Distance sensor inside: %02f\n", distance);
+                } while (!(distance > -1 && distance < 4) && !stopping);
                 Pump_pumpML(waterAmount);
             }
-            while(!silenced && !stopping) {}; 
+            // Don't stop screaming until the alarm has been shut off
+            while (!silenced && !stopping) {}; 
             return;
-        }
+        }  
     }
 }
 
@@ -121,27 +146,4 @@ void* timerThread(void* arg) {
         timer();
     }
     return NULL;
-}
-
-long long getTimeInUs(void)
-{
-    struct timespec spec;
-    clock_gettime(CLOCK_REALTIME, &spec);
-    long long seconds = spec.tv_sec;
-    long long nanoSeconds = spec.tv_nsec;
-    long long microSeconds = seconds * 1000000
-    + nanoSeconds / 1000;
-    return microSeconds;
-}
-
-void sleepForMs(long long delayInMs) {
-    const long long NS_PER_MS = 1000 * 1000;
-    const long long NS_PER_SECOND = 1000000000;
-
-    long long delayNs = delayInMs * NS_PER_MS;
-    int seconds = delayNs / NS_PER_SECOND;
-    int nanoseconds = delayNs % NS_PER_SECOND;
-
-    struct timespec reqDelay = {seconds, nanoseconds};
-    nanosleep(&reqDelay, (struct timespec *) NULL);
 }

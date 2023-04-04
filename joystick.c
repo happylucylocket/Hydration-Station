@@ -188,8 +188,8 @@ void* joystickThread(void* arg) {
             }
             else {
                 printf("ALARM SILENCED\n");
-                Timer_silenceAlarm();
                 Audio_stopScream();
+                Timer_silenceAlarm();
             }
             sleepForMs(300);
         }

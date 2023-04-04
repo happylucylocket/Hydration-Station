@@ -46,7 +46,7 @@ $(document).ready(function() {
 	window.setInterval(function() {updateWaterVolume()}, 500);
 	// window.setInterval(function() {checkServer()}, 500);
 
-	$('#error-box').hide();
+	$('#drinkWater').hide();
 
     $('#alarmOff').click(function(){
 		sendCommandViaUDP("silence");
@@ -78,7 +78,6 @@ $(document).ready(function() {
 
 	$('#stop').click(function(){
 		sendCommandViaUDP("quit");
-		// isError = true;
 	});
 	
 	socket.on('timeRemaining', function(result) {
@@ -86,6 +85,12 @@ $(document).ready(function() {
 		time.setSeconds(result);
 		var res = time.toISOString().slice(11, 19);
         $('#timeRemaining').html(res);
+		if (time.getTime() === 0) {
+			$("#drinkWater").css('display', 'block');
+		}
+		else {
+			$('#drinkWater').css('display', 'none');
+		}
 	});
 
 	socket.on('timerContents', function(result) {
@@ -109,20 +114,6 @@ $(document).ready(function() {
 			$('#volumeid').html("930mL");
 		}
 	});
-
-	// socket.on('serverError', function(result) {
-	// 	console.log(typeof(result))
-	// 	if (result == "NO RESPONSE") {
-	// 		isError = true;
-	// 		$('#error-box').show();
-	// 		$('#error-text').html("SERVER ERROR: No response from application. Is it running?");
-	// 	}
-	// 	else {
-	// 		$('#error-box').hide();
-	// 		isError = false;
-	// 	}
-
-	// });
 });
 
 function sendCommandViaUDP(message) {

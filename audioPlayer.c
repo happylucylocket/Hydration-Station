@@ -9,12 +9,14 @@
 #include "audioPlayer.h"
 #include <pthread.h>
 #include <stdbool.h>
+#include "timer.h"
 
 // File used for play-back:
 // If cross-compiling, must have this file available, via this relative path,
 // on the target when the application is run. This example's Makefile copies the wave-files/
 // folder along with the executable to ensure both are present.
-#define SOURCE_FILE "wave-files/screams.wav"
+#define SCREAM_FILE "wave-files/screams.wav"
+#define QUENCH_FILE "wave-files/quench.wav"
 
 #define DEFAULT_VOLUME 100
 #define SAMPLE_RATE   88200 // Originally 44100
@@ -23,7 +25,8 @@
 
 
 snd_pcm_t *handle;
-wavedata_t sampleFile;
+wavedata_t screamFile;
+wavedata_t quenchFile;
 
 static pthread_t audioThreadId;
 static void* audioThread(void* arg);
@@ -46,18 +49,21 @@ void Audio_init(void)
 
 	// Load wave file we want to play:
 	
-	Audio_readWaveFileIntoMemory(SOURCE_FILE, &sampleFile);
+	Audio_readWaveFileIntoMemory(SCREAM_FILE, &screamFile);
+	Audio_readWaveFileIntoMemory(QUENCH_FILE, &quenchFile);
 }
 
 void Audio_cleanup(void)
 {
 	printf("Cleaning up audioPlayer.c\n");
 	Audio_stopScream();
+	sleepForMs(2000);
 	// Cleanup, letting the music in buffer play out (drain), then close and free.
 	snd_pcm_drain(handle);
 	snd_pcm_hw_free(handle);
 	snd_pcm_close(handle);
-	free(sampleFile.pData);
+	free(screamFile.pData);
+	free(quenchFile.pData);
 }
 
 // Open the PCM audio output device and configure it.
@@ -184,29 +190,26 @@ static void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData)
 		fprintf(stderr, "ERROR: Failed writing audio with snd_pcm_writei(): %li\n", frames);
 		exit(EXIT_FAILURE);
 	}
-	// if (frames > 0 && frames < pWaveData->numSamples)
-	// 	printf("Short write (expected %d, wrote %li)\n", pWaveData->numSamples, frames);
 }
 
 void Audio_playScream(void) {
 	// Play Audio thread
 	stopping = false;
 	pthread_create(&audioThreadId, NULL, audioThread, NULL);
-	printf("Exit playScream\n");
 }
 
 void Audio_stopScream(void) {
 	snd_pcm_drop(handle);
 	stopping = true;
 	pthread_join(audioThreadId, NULL);
-	printf("STOP SCREAM FINISHED\n");
 }
 
 
 static void* audioThread(void* arg) {
     while(!stopping) {
 		printf("Playing audio\n");
-		Audio_playFile(handle, &sampleFile);
+		Audio_playFile(handle, &screamFile);
     }
+	Audio_playFile(handle, &quenchFile);
     return NULL;
 }
