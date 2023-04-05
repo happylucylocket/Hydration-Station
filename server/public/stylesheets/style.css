@@ -19,28 +19,18 @@ h1, h2 {
 }
 
 #left-box {
-	margin-right: 300px;	
+	/* margin-right: 300px; */
+	align-self: center;
 	border: thin black solid;
 	padding-left: 10pt;
 	padding-right: 10pt;
 	min-height: 200pt;
 }
 
-#error-box {
-	border: thin black solid;
-	clear: both;
-	background-color: red;
-	padding-left: 10pt;
-	padding-right: 10pt;
-	min-height: 100pt;
-	margin-top: 20px;
-	display: none;
-}
-
-#error-text {
-	color: black;
-}
-
 #timerBox {
 	margin-left: 2em;
+}
+
+#drinkWater {
+	color:rgb(5, 153, 221);
 }

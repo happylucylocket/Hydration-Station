@@ -155,8 +155,8 @@ static void silence_response()
     }
     else {
         printf("ALARM SILENCED\n");
-        Timer_silenceAlarm();
         Audio_stopScream();
+        Timer_silenceAlarm();
     }
     // Compose the reply message:
     // (NOTE: watch for buffer overflows!).

@@ -29,7 +29,7 @@ void DistanceSensor_init(void)
 
 void DistanceSensor_cleanup(void)
 {
-    printf("Cleaning up distanceSensor.c");
+    printf("Cleaning up distanceSensor.c\n");
     freePruMmapAddr(pruBase);
 }
 
