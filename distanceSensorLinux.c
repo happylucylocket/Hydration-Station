@@ -45,7 +45,7 @@ void test(void)
     printf("\n");
 }
 static volatile void* getPruMmapAddr(void)
-{
+{   
     int fd = open("/dev/mem", O_RDWR | O_SYNC);
     if (fd == -1) {
         perror("ERROR: could not open /dev/mem");

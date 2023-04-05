@@ -99,18 +99,19 @@ bool Timer_getSensor() {
 static void timer(void) {
     silenced = false;
     secondsRemaining = totalSeconds; // Set the timer to the wanted time interval
-
+    int mins = 0, seconds = 0;
+    double distance = 0;
     while (secondsRemaining >= 0 && !stopping) {
         sleepForMs(1000);
-        int mins = secondsRemaining/60;
-        int seconds = secondsRemaining%60;
+        mins = secondsRemaining/60;
+        seconds = secondsRemaining%60;
         printf("Time remaining: %d:%d\n", mins, seconds);
         secondsRemaining -= 1;
-        double distance = DistanceSensor_getDistance();
+        distance = DistanceSensor_getDistance();
         isCupDetected = (distance > -1 && distance < MAX_CUP_DISTANCE);
 
         if (secondsRemaining <= 0) {
-            double distance = DistanceSensor_getDistance();
+            distance = DistanceSensor_getDistance();
             printf("Distance sensor: %02f\n", distance);
             // If there is something to hold the water close enough to the distance sensor, dispense water and then scream
             if (!stopping) {
@@ -126,11 +127,11 @@ static void timer(void) {
                     do {
                         distance = DistanceSensor_getDistance();
                     } while (!(distance > -1 && distance < MAX_CUP_DISTANCE) && !stopping);
-                    isCupDetected = true;
-                    printf("Detected cup!\n");
 
                     if (!stopping) {
                         Pump_pumpML(waterAmount);
+                        isCupDetected = true;
+                        printf("Detected cup!\n");
                     }
                 }
             }

@@ -195,6 +195,7 @@ void* joystickThread(void* arg) {
         }
         else if (currentJoystick == UP) {
             // Increase water amount by 1 preset amount
+            printf("WATER INCREASED\n");
             int current_amount = Timer_getWaterAmount();
             if (current_amount == CUP_ML) {
                 Timer_setWaterAmount(MUG_ML);
@@ -212,6 +213,7 @@ void* joystickThread(void* arg) {
         }
         else if (currentJoystick == DOWN) {
             // Decrease water amount by 1 preset amount
+            printf("WATER DECREASED\n");
             int current_amount = Timer_getWaterAmount();
             if (current_amount == BIG_BOTTLE_ML) {
                 Timer_setWaterAmount(BOTTLE_ML);
@@ -228,7 +230,8 @@ void* joystickThread(void* arg) {
             sleepForMs(300);
         }
         else if (currentJoystick == LEFT) {
-             // Minus 15 minutes
+            // Minus 15 minutes
+            printf("TIME INCREASED\n");
             long long currentTimer = Timer_getTimer();
             int newTime = currentTimer - 900;
             Timer_setTimer(newTime);
@@ -236,6 +239,7 @@ void* joystickThread(void* arg) {
         }
         else if (currentJoystick == RIGHT) {
             // Add 15 minutes
+            printf("TIME DECREASED");
             long long currentTimer = Timer_getTimer();
             int newTime = currentTimer + 900;
             Timer_setTimer(newTime);

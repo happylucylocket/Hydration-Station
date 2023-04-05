@@ -20,7 +20,7 @@ int main() {
 
     Shutdown_waitForShutdown();
 
-    Shutdown_freeMemory();
+    Shutdown_cleanup();
     UDP_cleanup();
     Timer_cleanup();
     Audio_cleanup();

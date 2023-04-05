@@ -7,6 +7,6 @@
 void Shutdown_waitForShutdown(void);
 void Shutdown_shutdown(void);
 void Shutdown_init(void);
-void Shutdown_freeMemory(void);
+void Shutdown_cleanup(void);
 
 #endif
