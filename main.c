@@ -15,13 +15,13 @@ int main() {
     Audio_init();
     Pump_init();
     Timer_init();
-    UDP_init();
     Shutdown_init();
+    UDP_init();
 
     Shutdown_waitForShutdown();
 
-    Shutdown_cleanup();
     UDP_cleanup();
+    Shutdown_cleanup();
     Timer_cleanup();
     Audio_cleanup();
     DistanceSensor_cleanup();

@@ -61,6 +61,7 @@ void UDP_init(void)
 
 void UDP_cleanup(void)
 {
+    stopping = true;
     printf("Cleaning up UDP thread\n");
     close(socketDescriptor);
     pthread_join(udpThreadId, NULL);
