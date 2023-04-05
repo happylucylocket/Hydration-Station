@@ -11,7 +11,9 @@
 #define DEFAULT_TIME 15 // for testing - DELETE LATER
 #define MIN_TIME 900 // 15 minutes
 #define MAX_TIME 10800 // 3 hours
+#define MAX_CUP_DISTANCE 4
 
+bool isCupDetected = false;
 static pthread_t timerThreadId;
 void* timerThread(void* arg);
 static pthread_mutex_t timerMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -89,6 +91,10 @@ void Timer_silenceAlarm()
     sem_post(&silencedSemaphore);
 }
 
+bool Timer_getSensor() {
+    return isCupDetected;
+}
+
 //30 minute timer
 static void timer(void) {
     silenced = false;
@@ -100,22 +106,29 @@ static void timer(void) {
         int seconds = secondsRemaining%60;
         printf("Time remaining: %d:%d\n", mins, seconds);
         secondsRemaining -= 1;
+        double distance = DistanceSensor_getDistance();
+        isCupDetected = (distance > -1 && distance < MAX_CUP_DISTANCE);
 
         if (secondsRemaining <= 0) {
             double distance = DistanceSensor_getDistance();
             printf("Distance sensor: %02f\n", distance);
             // If there is something to hold the water close enough to the distance sensor, dispense water and then scream
             if (!stopping) {
-                if (distance > -1 && distance < 4) {
+                if (distance > -1 && distance < MAX_CUP_DISTANCE) {
+                    isCupDetected = true;
                     Pump_pumpML(waterAmount);
                     Audio_playScream();
                 } else {
                     // If there isn't anything in front of distance sensor, scream first and wait until something is in front of the sensor to dispense water
                     Audio_playScream();
                     printf("Waiting to detect a cup infront\n");
+                    isCupDetected = false;
                     do {
                         distance = DistanceSensor_getDistance();
-                    } while (!(distance > -1 && distance < 4) && !stopping);
+                    } while (!(distance > -1 && distance < MAX_CUP_DISTANCE) && !stopping);
+                    isCupDetected = true;
+                    printf("Detected cup!\n");
+
                     if (!stopping) {
                         Pump_pumpML(waterAmount);
                     }

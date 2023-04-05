@@ -23,27 +23,15 @@ function updateCountdown() {
 	socket.emit('updateCountdown', 'time remaining');
 }
 
-// Hide error box until error occurs
-function checkNotOn() {
-	if (isError) {
-		showError();
-	}
-	else {
-		$('#error-box').hide();
-	}
-}
-
-var isError = false;
-
-function showError() {
-	$('#error-box').show();
-	$('#error-text').html("SERVER ERROR: No response from beat-box application. Is it running?");
+function updateSensor() {
+	socket.emit('updateSensor', 'sensor');
 }
 
 $(document).ready(function() {
     window.setInterval(function() {updateCountdown()}, 1000);
 	window.setInterval(function() {updateTimer()}, 500);
 	window.setInterval(function() {updateWaterVolume()}, 500);
+	window.setInterval(function() {updateSensor()}, 500);
 	// window.setInterval(function() {checkServer()}, 500);
 
 	$('#drinkWater').hide();
@@ -112,6 +100,16 @@ $(document).ready(function() {
 		}
 		else if (result == 930) {
 			$('#volumeid').html("930mL");
+		}
+	});
+
+	socket.on('isDetected', function(result) {
+		console.log(result);
+		if (result === "false") {
+			$("#sensor").css('display', 'block');
+		}
+		else {
+			$("#sensor").css('display', 'none');
 		}
 	});
 });

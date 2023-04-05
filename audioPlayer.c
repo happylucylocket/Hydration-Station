@@ -16,7 +16,7 @@
 // on the target when the application is run. This example's Makefile copies the wave-files/
 // folder along with the executable to ensure both are present.
 #define SCREAM_FILE "wave-files/screams.wav"
-#define QUENCH_FILE "wave-files/quench.wav"
+#define QUENCH_FILE "wave-files/quench2.wav"
 
 #define DEFAULT_VOLUME 100
 #define SAMPLE_RATE   88200 // Originally 44100

@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "audioPlayer.h"
 #include "pump.h"
+#include "distanceSensorLinux.h"
 
 #define MSG_MAX_LEN 1024
 #define PORT        8088
@@ -37,6 +38,7 @@ static void cup_response();
 static void mug_response();
 static void bottle_response();
 static void big_bottle_response();
+static void sensor_response();
 
 void UDP_init(void) 
 {
@@ -143,6 +145,11 @@ void* udpThread(void* arg)
 		else if (strncmp(messageRx, "quit", strlen("quit")) == 0) {
 			// printf("User selected to quit\n");
 			quit_response();
+		}
+        
+        else if (strncmp(messageRx, "sensor", strlen("sensor")) == 0) {
+			// printf("User selected to get sensor\n");
+			sensor_response();
 		}
 	}
     return NULL;
@@ -342,6 +349,27 @@ static void timer_response()
     // (NOTE: watch for buffer overflows!).
     char messageTx[MSG_MAX_LEN];
     sprintf(messageTx, "%lld", time);
+
+    // Transmit a reply:
+    sin_len = sizeof(sinRemote);
+    sendto( socketDescriptor,
+        messageTx, strlen(messageTx),
+        0,
+        (struct sockaddr *) &sinRemote, sin_len);
+}
+
+static void sensor_response()
+{
+    // Get distance
+    bool isCupDetected = Timer_getSensor();
+    // Compose the reply message:
+    // (NOTE: watch for buffer overflows!).
+    char messageTx[MSG_MAX_LEN];
+    if (isCupDetected) {
+        sprintf(messageTx, "true");
+    } else {
+        sprintf(messageTx, "false");
+    }
 
     // Transmit a reply:
     sin_len = sizeof(sinRemote);

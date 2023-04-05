@@ -15,5 +15,6 @@ void Timer_setWaterAmount(int amount);
 
 long long getTimeInUs(void);
 void sleepForMs(long long delayInMs);
+bool Timer_getSensor(void);
 
 #endif
