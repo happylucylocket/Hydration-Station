@@ -129,8 +129,8 @@ static void timer(void) {
                     } while (!(distance > -1 && distance < MAX_CUP_DISTANCE) && !stopping);
 
                     if (!stopping) {
-                        Pump_pumpML(waterAmount);
                         isCupDetected = true;
+                        Pump_pumpML(waterAmount);
                         printf("Detected cup!\n");
                     }
                 }
