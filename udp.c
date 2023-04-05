@@ -88,60 +88,60 @@ void* udpThread(void* arg)
 		// Make it null terminated (so string functions work)
 		// - recvfrom given max size - 1, so there is always room for the null
 		messageRx[bytesRx] = 0;
-		printf("Message received (%d bytes): \n\n'%s'\n", bytesRx, messageRx);
+		// printf("Message received (%d bytes): \n\n'%s'\n", bytesRx, messageRx);
 
         if (strncmp(messageRx, "silence", strlen("silence")) == 0) {
-			printf("User silenced timer!\n");
+			// printf("User silenced timer!\n");
 			silence_response();
 		}
 
         else if (strncmp(messageRx, "cup", strlen("cup")) == 0) {
-			printf("User selected to change volume to 235mL!\n");
+			// printf("User selected to change volume to 235mL!\n");
 			cup_response();
 		}
 
         else if (strncmp(messageRx, "mug", strlen("mug")) == 0) {
-			printf("User selected to change volume to 350mL!\n");
+			// printf("User selected to change volume to 350mL!\n");
 			mug_response();
 		}
 
         else if (strncmp(messageRx, "bottle", strlen("bottle")) == 0) {
-			printf("User selected to change volume to 500mL!\n");
+			// printf("User selected to change volume to 500mL!\n");
 			bottle_response();
 		}
 
         else if (strncmp(messageRx, "big bottle", strlen("big bottle")) == 0) {
-			printf("User selected to change volume to 930mL!\n");
+			// printf("User selected to change volume to 930mL!\n");
 			big_bottle_response();
 		}
 
         else if (strncmp(messageRx, "timer up", strlen("timer up")) == 0) {
-			printf("User selected to increase timer!\n");
+			// printf("User selected to increase timer!\n");
 			timer_up_response();
 		}
 		
         else if (strncmp(messageRx, "timer down", strlen("timer down")) == 0) {
-			printf("User selected to decrease timer!\n");
+			// printf("User selected to decrease timer!\n");
 			timer_down_response();
 		}
 
         else if (strncmp(messageRx, "water volume", strlen("water volume")) == 0) {
-            printf("User selected to check water volume!\n");
+            // printf("User selected to check water volume!\n");
 			water_volume_response();
 		}
 
         else if (strncmp(messageRx, "time remaining", strlen("time remaining")) == 0) {
-            printf("User selected to check time remaining!\n");
+            // printf("User selected to check time remaining!\n");
 			time_remaining_response();
 		}
 
         else if (strncmp(messageRx, "timer", strlen("timer")) == 0) {
-            printf("User selected to check total alarm time!\n");
+            // printf("User selected to check total alarm time!\n");
 			timer_response();
 		}
 
 		else if (strncmp(messageRx, "quit", strlen("quit")) == 0) {
-			printf("User selected to quit\n");
+			// printf("User selected to quit\n");
 			quit_response();
 		}
 	}

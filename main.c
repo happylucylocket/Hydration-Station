@@ -10,21 +10,22 @@
 #include "distanceSensorLinux.h"
 
 int main() {
-    Audio_init();
     Joystick_init();
     DistanceSensor_init();
-    Timer_init();
+    Audio_init();
     Pump_init();
+    Timer_init();
     UDP_init();
+    Shutdown_init();
 
     Shutdown_waitForShutdown();
-    
-    
+
+    Shutdown_freeMemory();
     UDP_cleanup();
     Timer_cleanup();
+    Audio_cleanup();
     DistanceSensor_cleanup();
     Joystick_cleanup();
-    Audio_cleanup();
 
     return 0;
 }

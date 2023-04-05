@@ -57,7 +57,6 @@ void Audio_cleanup(void)
 {
 	printf("Cleaning up audioPlayer.c\n");
 	Audio_stopScream();
-	sleepForMs(2000);
 	// Cleanup, letting the music in buffer play out (drain), then close and free.
 	snd_pcm_drain(handle);
 	snd_pcm_hw_free(handle);
@@ -199,17 +198,17 @@ void Audio_playScream(void) {
 }
 
 void Audio_stopScream(void) {
-	snd_pcm_drop(handle);
 	stopping = true;
+	snd_pcm_drop(handle);
 	pthread_join(audioThreadId, NULL);
 }
 
-
 static void* audioThread(void* arg) {
+	printf("Inside audioThread, playing scream\n");
     while(!stopping) {
-		printf("Playing audio\n");
 		Audio_playFile(handle, &screamFile);
     }
+	printf("Playing quench\n");
 	Audio_playFile(handle, &quenchFile);
     return NULL;
 }
